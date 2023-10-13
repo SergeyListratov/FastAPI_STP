@@ -28,6 +28,14 @@ class BaseDAO:
             result = await session.execute(query)
             return result.mappings().all()
 
+    # @classmethod
+    # async def add(cls, **date):
+    #     async with async_session_maker() as session:
+    #         query = insert(cls.model).values(**date)
+    #         await session.execute(query)
+    #         await session.commit()
+
+
     @classmethod
     async def add(cls, **date):
         async with async_session_maker() as session:

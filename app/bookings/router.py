@@ -1,3 +1,5 @@
+from datetime import date
+
 from fastapi import APIRouter, Request, Depends
 
 from app.bookings.dao import BookingDAO
@@ -12,30 +14,13 @@ router = APIRouter(
 
 
 @router.get("")
-async def get_bookings(user: Users = Depends(get_current_user)): #-> list[SBooking]:
-    # print(user, type(user), user.email)
-    # return await BookingDAO.find_all(user_id=user.id)
-    return await BookingDAO.find_all(user_id=1)
+async def get_bookings(user: Users = Depends(get_current_user)) -> list[SBooking]:
+    return await BookingDAO.find_all(user_id=user.id)
 
 
-# @router.get("")
-# async def get_bookings():
-#     async with async_session_maker() as session:
-#         query = select(Bookings.__table__.columns)
-#         result = await session.execute(query)
-#         return result.mappings().all()
-
-
-# async def get_bookings_example(mode: str):
-#     async with async_session_maker() as session:
-#         if mode == 'mappings':
-#             query = select(Bookings.__table__.columns).limit(3)
-#         else:
-#             query = select(Bookings).limit(3)
-#         result = await session.execute(query)
-#         if mode == 'all':
-#             return result.all()
-#         if mode == 'scalars':
-#             return result.scalars().all()
-#         if mode == 'mappings':
-#             return result.mappings().all()
+@router.post("")
+async def add_bookings(
+        room_id: int, date_from: date, date_to: date,
+        user: Users = Depends(get_current_user)
+):
+    await BookingDAO.add(user.id, room_id, date_from, date_to)
